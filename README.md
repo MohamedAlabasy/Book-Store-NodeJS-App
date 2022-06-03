@@ -28,6 +28,6 @@ nodemon app.js
 ### To help you understand the project databases, see the following ERF
 
 <p align="center">
-   <img src="https://user-images.githubusercontent.com/93389016/171961845-16cbb1b2-054f-4ec9-b396-5989917303be.jpg" alt="Build Status">
+   <img src="https://user-images.githubusercontent.com/93389016/171967001-7c00dc10-66e7-4975-8432-b9fd89ad0928.jpg" alt="Build Status">
 </p>
 <h3 align="center"> DataBase ERD </h3>
