@@ -1,5 +1,5 @@
 const express = require('express');
-const morgan = require('morgan')
+const morgan = require('morgan');
 require('dotenv').config();
 
 const PORT = process.env.PORT || 5555;
@@ -10,9 +10,6 @@ app.listen(PORT, () => {
     console.log(`App Run at http://${process.env.HOST}:${PORT}`);
 });
 
-
-app.use(morgan('tiny'));
-
 //to add header or use cors
 app.use((request, response, next) => {
     response.header("Access-Control-Allow-Origin", "*");//alow to any web side to connect to my server
@@ -20,6 +17,10 @@ app.use((request, response, next) => {
     response.header("Access-Control-Allow-Header", "Content-Type,Authorization");
     next();
 });
+
+// morgan in dev mode
+app.use(morgan('tiny'));
+
 
 // middleware not Found
 app.use((request, response, next) => {
