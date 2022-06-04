@@ -6,7 +6,7 @@ const body_parser = require('body-parser');
 const router = require('./Routers/AuthRouter');
 
 require('dotenv').config();
-const PORT = process.env.PORT || 5555;
+const PORT = process.env.PORT || 8888;
 const app = express();
 
 
