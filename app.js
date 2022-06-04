@@ -1,6 +1,6 @@
 const express = require('express');
+const morgan = require('morgan')
 require('dotenv').config();
-console.log(process.env.PORT);
 
 const PORT = process.env.PORT || 5555;
 const app = express();
@@ -10,6 +10,8 @@ app.listen(PORT, () => {
     console.log(`App Run at http://${process.env.HOST}:${PORT}`);
 });
 
+
+app.use(morgan('tiny'));
 //to add header or use cors
 app.use((request, response, next) => {
     response.header("Access-Control-Allow-Origin", "*");//alow to any web side to connect to my server
