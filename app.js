@@ -1,5 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
+const body_parser = require('body-parser');
+
 require('dotenv').config();
 
 const PORT = process.env.PORT || 5555;
@@ -20,6 +22,8 @@ app.use((request, response, next) => {
 
 // morgan in dev mode
 app.use(morgan('tiny'));
+app.use(body_parser.json());
+app.use(body_parser.urlencoded({ extended: false }));
 
 
 // middleware not Found
