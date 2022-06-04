@@ -12,6 +12,7 @@ app.listen(PORT, () => {
 
 
 app.use(morgan('tiny'));
+
 //to add header or use cors
 app.use((request, response, next) => {
     response.header("Access-Control-Allow-Origin", "*");//alow to any web side to connect to my server
