@@ -1,13 +1,13 @@
 const bcrypt = require('bcryptjs');
 
-const Auth = require('../Models/AuthSchema');
+const User = require('../Models/UserSchema');
 const { validate } = require('../Utils/validate')
 // #=======================================================================================#
 // #			                            login                                          #
 // #=======================================================================================#
 exports.login = (request, response, next) => {
     validate(request)
-    Auth.findOne({ email: request.body.email }).select('+password')
+    User.findOne({ email: request.body.email }).select('+password')
         .then((data) => {
             if (data == null) {
                 throw new Error(`No user with this id = ${request.body.id}`)
@@ -38,7 +38,7 @@ exports.login = (request, response, next) => {
 exports.register = (request, response, next) => {
     validate(request)
     let hash = bcrypt.hashSync(request.body.password, 10);
-    let user = new Auth({
+    let user = new User({
         name: request.body.name,
         email: request.body.email,
         gender: request.body.gender,
@@ -65,7 +65,7 @@ exports.register = (request, response, next) => {
 // #=======================================================================================#
 exports.getUserData = (request, response, next) => {
     validate(request)
-    Auth.findById(request.body.id).select('-createdAt -updatedAt -__v')
+    User.findById(request.body.id).select('-createdAt -updatedAt -__v')
         .then((data) => {
             if (data == null) {
                 throw new Error(`No user with this id = ${request.body.id}`)
@@ -85,7 +85,7 @@ exports.getUserData = (request, response, next) => {
 // #=======================================================================================#
 exports.getAllUsersData = (request, response, next) => {
     validate(request)
-    Auth.find({}).select('-createdAt -updatedAt -__v')
+    User.find({}).select('-createdAt -updatedAt -__v')
         .then(data => {
             if (data == null) {
                 throw new Error('No user to show')
@@ -105,7 +105,7 @@ exports.getAllUsersData = (request, response, next) => {
 // #=======================================================================================#
 exports.deleteUser = (request, response, next) => {
     validate(request)
-    Auth.findByIdAndDelete(request.body.id)
+    User.findByIdAndDelete(request.body.id)
         .then((data) => {
             if (data == null) {
                 throw new Error(`No user with this id = ${request.body.id}`)

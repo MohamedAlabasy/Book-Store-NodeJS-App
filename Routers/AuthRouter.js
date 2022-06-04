@@ -1,10 +1,10 @@
 const express = require('express');
-const router = express.Router();
-
-const Auth = require('../Models/AuthSchema')
-const controller = require('../Controllers/AuthController');
 const { query, body, param } = require('express-validator');
 
+const User = require('../Models/UserSchema')
+const controller = require('../Controllers/AuthController');
+
+const router = express.Router();
 // #=======================================================================================#
 // #			                            login                                          #
 // #=======================================================================================#
@@ -20,7 +20,7 @@ router.post('/register', [
     body('name').isAlpha().withMessage('invalid name'),
     body('email').isEmail().withMessage('invalid email')
         .custom((value) => {
-            return Auth.findOne({ email: value })
+            return User.findOne({ email: value })
                 .then((data) => {
                     if (data)
                         return Promise.reject('Email already taken')
