@@ -14,7 +14,7 @@ You can also see all of your purchased books history or create your own favorite
 
 `Step 1` :  Download the source code .
 ```
-git https://github.com/MohamedAlabasy/Book-Store-NodeJS-App.git
+git clone https://github.com/MohamedAlabasy/Book-Store-NodeJS-App.git
 ```
 
 `Step 2` :  Enter the project file then install package
