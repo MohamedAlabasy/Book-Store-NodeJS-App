@@ -3,15 +3,16 @@ const { query, body, param } = require('express-validator');
 
 const User = require('../Models/UserSchema')
 const controller = require('../Controllers/AuthController');
+const checkTokens = require('../Middleware/checkTokens');
 
 const router = express.Router();
+
 // #=======================================================================================#
 // #			                            login                                          #
 // #=======================================================================================#
 router.post('/login', [
     body('email').isEmail().withMessage('invalid email'),
 ], controller.login);
-
 
 // #=======================================================================================#
 // #			                            Register                                       #
@@ -33,26 +34,28 @@ router.post('/register', [
 // #=======================================================================================#
 // #			                       get User by id                                      #
 // #=======================================================================================#
-router.get('/user', [
+router.get('/user', checkTokens, [
     body('id').isInt().withMessage('invalid id'),
 ], controller.getUserData);
 
 // #=======================================================================================#
 // #			                         get All Users                                     #
 // #=======================================================================================#
-router.get('/users', controller.getAllUsersData);
+router.get('/users', checkTokens, controller.getAllUsersData);
 
 // #=======================================================================================#
 // #			                          delete User                                      #
 // #=======================================================================================#
-router.delete('', [
+router.delete('', checkTokens, [
     body('id').isInt().withMessage('invalid id'),
 ], controller.deleteUser);
 
 // #=======================================================================================#
-// #			                            lgoOut                                         #
+// #			                            logout                                         #
 // #=======================================================================================#
-router.post('/logout', controller.lgoOut);
+router.post('/logout', checkTokens, controller.logout);
 
-
+// #=======================================================================================#
+// #			                        exports router                                     #
+// #=======================================================================================#
 module.exports = router;

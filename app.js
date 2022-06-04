@@ -6,22 +6,27 @@ const body_parser = require('body-parser');
 const router = require('./Routers/AuthRouter');
 
 require('dotenv').config();
-const PORT = process.env.PORT || 8888;
 const app = express();
 
-
-mongoose.connect('mongodb://localhost:27017/boot_store')
+// #=======================================================================================#
+// #			                        connect mongoose                                   #
+// #=======================================================================================#
+mongoose.connect(process.env.MONGO_DB)
     .then((data) => {
-        console.log('DB connected ... ');
+        console.log('DB connected ...');
         // run server
         app.listen(process.env.PORT || PORT, () => {
-            console.log(`App Run at http://${process.env.HOST}:${PORT}`);
+            console.log(`App Run at http://${process.env.HOST}:${process.env.PORT || 8888}`);
         });
     }).catch((error) => {
-        console.log('DB not connected', error + '');
+        console.log('DB not connected: ' + error);
     });
 
-//to add header or use cors
+app.use(morgan('tiny'));
+
+// #=======================================================================================#
+// #			                     add header or use cors                                #
+// #=======================================================================================#
 app.use((request, response, next) => {
     response.header("Access-Control-Allow-Origin", "*");//alow to any web side to connect to my server
     response.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS"); //for routs
@@ -29,13 +34,21 @@ app.use((request, response, next) => {
     next();
 });
 
-// morgan in dev mode
-app.use(morgan('tiny'));
+// #=======================================================================================#
+// #			                            body_parse                                     #
+// #=======================================================================================#
 app.use(body_parser.json());
 app.use(body_parser.urlencoded({ extended: false }));
+
+// #=======================================================================================#
+// #			                            router                                         #
+// #=======================================================================================#
 app.use('', router);
 
-// middleware not Found
+
+// #=======================================================================================#
+// #			                        not Found middleware                               #
+// #=======================================================================================#
 app.use((request, response, next) => {
     response.status(404).json({
         status: 0,
@@ -43,11 +56,14 @@ app.use((request, response, next) => {
     })
 })
 
-// middleware error
+// #=======================================================================================#
+// #			                      error middleware                                     #
+// #=======================================================================================#
 app.use((error, request, response, next) => {
     let status = error.status || 500;
     response.status(status).json({
         status: 0,
-        error: error + ''
+        error: error.message + ''
     })
 })
+

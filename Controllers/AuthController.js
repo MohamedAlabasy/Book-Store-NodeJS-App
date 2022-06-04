@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const User = require('../Models/UserSchema');
 const { validate } = require('../Utils/validate')
@@ -7,24 +8,34 @@ const { validate } = require('../Utils/validate')
 // #=======================================================================================#
 exports.login = (request, response, next) => {
     validate(request)
-    User.findOne({ email: request.body.email }).select('+password')
+    User.findOne({ email: request.body.email }).select('+password +token')
         .then((data) => {
-            if (data == null) {
-                throw new Error(`No user with this id = ${request.body.id}`)
+            if (data === null) {
+                throw new Error(`No user with this email = ${request.body.email}`)
             } else {
                 let passwordIsValid = bcrypt.compareSync(request.body.password, data.password)
                 if (!passwordIsValid) {
                     throw new Error(`invalid password`)
                 } else {
-                    response.status(200).json({
-                        status: 1,
-                        data: {
-                            _id: data._id,
-                            name: data.name,
-                            email: data.email,
-                            gender: data.gender,
-                        },
+                    // to add token to router
+                    const accessToken = jwt.sign({ id: data._id, email: data.email }, process.env.ACCESS_TOKEN_SECRET, {
+                        expiresIn: 86400 //for 24 hour
                     });
+                    // add token to db
+                    User.findOneAndUpdate({ token: accessToken }).then(() => {
+                        response.status(200).json({
+                            status: 1,
+                            data: {
+                                id: data._id,
+                                token: data.token,
+                                name: data.name,
+                                email: data.email,
+                                gender: data.gender,
+                            },
+                        });
+                    }).catch(error => {
+                        next(error);
+                    })
                 }
             }
         })
@@ -49,7 +60,7 @@ exports.register = (request, response, next) => {
             response.status(200).json({
                 status: 1,
                 data: {
-                    _id: data._id,
+                    id: data._id,
                     name: data.name,
                     email: data.email,
                     gender: data.gender,
@@ -67,7 +78,7 @@ exports.getUserData = (request, response, next) => {
     validate(request)
     User.findById(request.body.id).select('-createdAt -updatedAt -__v')
         .then((data) => {
-            if (data == null) {
+            if (data === null) {
                 throw new Error(`No user with this id = ${request.body.id}`)
             } else {
                 response.status(200).json({
@@ -80,6 +91,7 @@ exports.getUserData = (request, response, next) => {
             next(error);
         })
 }
+
 // #=======================================================================================#
 // #			                         get All Users                                     #
 // #=======================================================================================#
@@ -87,9 +99,10 @@ exports.getAllUsersData = (request, response, next) => {
     validate(request)
     User.find({}).select('-createdAt -updatedAt -__v')
         .then(data => {
-            if (data == null) {
+            if (data === null) {
                 throw new Error('No user to show')
             } else {
+                if (data.length === 0) data = 'No users to show'
                 response.status(200).json({
                     status: 1,
                     data: data,
@@ -107,7 +120,7 @@ exports.deleteUser = (request, response, next) => {
     validate(request)
     User.findByIdAndDelete(request.body.id)
         .then((data) => {
-            if (data == null) {
+            if (data === null) {
                 throw new Error(`No user with this id = ${request.body.id}`)
             } else {
                 data.deleteUser
@@ -123,12 +136,16 @@ exports.deleteUser = (request, response, next) => {
 }
 
 // #=======================================================================================#
-// #			                            lgoOut                                         #
+// #			                            logout                                         #
 // #=======================================================================================#
-exports.lgoOut = (request, response, next) => {
+exports.logout = (request, response, next) => {
     validate(request)
-    response.status(200).json({
-        status: 1,
-        data: 'lgo out',
+    User.findOneAndUpdate({ token: null }).then(() => {
+        response.status(200).json({
+            status: 1,
+            data: 'logout successful',
+        })
+    }).catch(error => {
+        next(error);
     })
 }
