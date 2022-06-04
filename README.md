@@ -25,6 +25,10 @@ npm i
 ```
 nodemon app.js 
 ```
+or
+```
+npm run mon
+```
 ### To help you understand the project databases, see the following ERF
 
 <p align="center">
