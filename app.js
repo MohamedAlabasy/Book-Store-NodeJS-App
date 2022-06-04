@@ -10,6 +10,13 @@ app.listen(PORT, () => {
     console.log(`App Run at http://${process.env.HOST}:${PORT}`);
 });
 
+//to add header or use cors
+app.use((request, response, next) => {
+    response.header("Access-Control-Allow-Origin", "*");//alow to any web side to connect to my server
+    response.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS"); //for routs
+    response.header("Access-Control-Allow-Header", "Content-Type,Authorization");
+    next();
+});
 
 // middleware not Found
 app.use((request, response, next) => {
