@@ -1,16 +1,25 @@
 const express = require('express');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
 const body_parser = require('body-parser');
 
-require('dotenv').config();
+const router = require('./Routers/AuthRouter');
 
+require('dotenv').config();
 const PORT = process.env.PORT || 5555;
 const app = express();
 
 
-app.listen(PORT, () => {
-    console.log(`App Run at http://${process.env.HOST}:${PORT}`);
-});
+mongoose.connect('mongodb://localhost:27017/boot_store')
+    .then((data) => {
+        console.log('DB connected ... ');
+        // run server
+        app.listen(process.env.PORT || PORT, () => {
+            console.log(`App Run at http://${process.env.HOST}:${PORT}`);
+        });
+    }).catch((error) => {
+        console.log('DB not connected', error + '');
+    });
 
 //to add header or use cors
 app.use((request, response, next) => {
@@ -24,7 +33,7 @@ app.use((request, response, next) => {
 app.use(morgan('tiny'));
 app.use(body_parser.json());
 app.use(body_parser.urlencoded({ extended: false }));
-
+app.use('', router);
 
 // middleware not Found
 app.use((request, response, next) => {
