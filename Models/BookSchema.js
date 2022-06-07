@@ -9,5 +9,7 @@ const schema = new mongoose.Schema({
     author: { type: Number, ref: 'authors' },
     category: { type: Number, ref: 'categories' },
 }, { timestamps: true });
+
 schema.plugin(AutoIncrementID, [{ field: '_id' }]);
+
 module.exports = mongoose.module('books', schema)
