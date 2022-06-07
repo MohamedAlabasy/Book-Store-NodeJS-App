@@ -3,8 +3,8 @@ const { AutoIncrementID } = require('@typegoose/auto-increment');
 
 const schema = new mongoose.Schema({
     _id: Number,
-    book: { type: String, ref: 'books' },
-    user: { type: String, ref: 'users' },
+    book: { type: Number, ref: 'books' },
+    user: { type: Number, ref: 'users' },
 }, { timestamps: true });
 
 schema.plugin(AutoIncrementID, [{ field: '_id' }]);
