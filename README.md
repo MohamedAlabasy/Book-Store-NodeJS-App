@@ -32,6 +32,6 @@ npm run mon
 ### To help you understand the project databases, see the following ERF
 
 <p align="center">
-   <img src="https://user-images.githubusercontent.com/93389016/171967001-7c00dc10-66e7-4975-8432-b9fd89ad0928.jpg" alt="Build Status">
+   <img src="https://user-images.githubusercontent.com/93389016/172471237-b50f578f-b66b-46d8-ba64-b84181a738dc.jpg" alt="Build Status">
 </p>
 <h3 align="center"> DataBase ERD </h3>
