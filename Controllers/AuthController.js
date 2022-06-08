@@ -3,12 +3,13 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../Models/UserSchema');
 const { validate } = require('../Utils/validate')
+const unreturnedData = "-createdAt -updatedAt -__v";
 // #=======================================================================================#
 // #			                            login                                          #
 // #=======================================================================================#
 exports.login = (request, response, next) => {
     validate(request)
-    User.findOne({ email: request.body.email }).select('+password +token')
+    User.findOne({ email: request.body.email }).select(`+password +token ${unreturnedData}`)
         .then((data) => {
             if (data === null) {
                 throw new Error(`No user with this email = ${request.body.email}`)
@@ -22,20 +23,26 @@ exports.login = (request, response, next) => {
                         expiresIn: 86400 //for 24 hour
                     });
                     // add token to db
-                    User.findOneAndUpdate({ token: accessToken }).then(() => {
-                        response.status(200).json({
-                            status: 1,
-                            data: {
-                                id: data._id,
+                    User.findOneAndUpdate({ token: accessToken })
+                        .then(() => {
+                            response.status(200).json({
+                                status: 1,
                                 token: data.token,
-                                name: data.name,
-                                email: data.email,
-                                gender: data.gender,
-                            },
-                        });
-                    }).catch(error => {
-                        next(error);
-                    })
+                                data: {
+                                    _id: data._id,
+                                    first_name: data.first_name,
+                                    last_name: data.last_name,
+                                    email: data.email,
+                                    birth_date: data.birth_date,
+                                    image: data.image,
+                                    country: data.country,
+                                    mobile_phone: data.mobile_phone,
+                                    gender: data.gender,
+                                }
+                            });
+                        }).catch(error => {
+                            next(error);
+                        })
                 }
             }
         })
@@ -65,7 +72,7 @@ exports.register = (request, response, next) => {
             response.status(200).json({
                 status: 1,
                 data: {
-                    id: data._id,
+                    _id: data._id,
                     first_name: data.first_name,
                     last_name: data.last_name,
                     email: data.email,
@@ -86,10 +93,10 @@ exports.register = (request, response, next) => {
 // #=======================================================================================#
 exports.getUserData = (request, response, next) => {
     validate(request)
-    User.findById(request.body.id).select('-createdAt -updatedAt -__v')
+    User.findById(request.body._id).select(unreturnedData)
         .then((data) => {
             if (data === null) {
-                throw new Error(`No user with this id = ${request.body.id}`)
+                throw new Error(`No user with this id = ${request.body._id}`)
             } else {
                 response.status(200).json({
                     status: 1,
@@ -107,7 +114,7 @@ exports.getUserData = (request, response, next) => {
 // #=======================================================================================#
 exports.getAllUsersData = (request, response, next) => {
     validate(request)
-    User.find({}).select('-createdAt -updatedAt -__v')
+    User.find({}).select(unreturnedData)
         .then(data => {
             if (data === null) {
                 throw new Error('No user to show')
@@ -129,7 +136,7 @@ exports.getAllUsersData = (request, response, next) => {
 // #=======================================================================================#
 exports.deleteUser = (request, response, next) => {
     validate(request)
-    User.findByIdAndDelete(request.body.id)
+    User.findByIdAndDelete(request.body._id)
         .then((data) => {
             if (data === null) {
                 throw new Error(`No user with this id = ${request.body.id}`)
@@ -137,7 +144,7 @@ exports.deleteUser = (request, response, next) => {
                 data.deleteUser
                 response.status(200).json({
                     status: 1,
-                    message: 'deleted successfully',
+                    message: 'User deleted successfully',
                 });
             }
         })

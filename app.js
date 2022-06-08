@@ -5,7 +5,8 @@ const body_parser = require('body-parser');
 const multer = require('multer');
 const path = require('path');
 
-const router = require('./Routers/AuthRouter');
+const userRouter = require('./Routers/AuthRouter');
+const controllerRouter = require('./Routers/CategoryRouter');
 
 require('dotenv').config();
 const app = express();
@@ -71,7 +72,8 @@ app.use(multer({ storage, fileFilter }).single('image'));
 // #=======================================================================================#
 // #			                            router                                         #
 // #=======================================================================================#
-app.use('', router);
+app.use('', userRouter);
+app.use('/category', controllerRouter);
 
 
 // #=======================================================================================#

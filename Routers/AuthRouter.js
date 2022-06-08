@@ -21,21 +21,20 @@ router.post('/register', [
     body('first_name').isAlpha().withMessage('invalid first name'),
     body('last_name').isAlpha().withMessage('invalid last name'),
     body('email').isEmail().withMessage('invalid email')
-        .custom((value) => {
-            return User.findOne({ email: value })
+        .custom((userEmail) => {
+            return User.findOne({ email: userEmail })
                 .then((data) => {
                     if (data)
-                        return Promise.reject('Email already taken')
+                        return Promise.reject('Email already exit')
                 })
         }),
     body('password').isStrongPassword().withMessage('Password Must contain at least 1 characters(upper and lower),numbers,special characters'),
     body('birth_date').isDate({ format: 'YYYY-MM-DD' }).withMessage('invalid birth date you must enter it in form of YYYY-MM-DD'),
     body('profile_image'),
-    // body('is_verifications'),
     body('country').isAlpha().withMessage('invalid country'),
-    body('mobile_phone').custom((phone) => {
+    body('mobile_phone').custom((phoneNumber) => {
         let reg = /^01[0125][0-9]{8}$/;
-        return reg.test(phone)
+        return reg.test(phoneNumber);
     }).withMessage('invalid mobile phone'),
     body('gender').isIn(['male', 'female']).withMessage("gender must be male or female"),
 ], controller.register);
@@ -44,7 +43,7 @@ router.post('/register', [
 // #			                       get User by id                                      #
 // #=======================================================================================#
 router.get('/user', checkTokens, [
-    body('id').isInt().withMessage('invalid id'),
+    body('_id').isInt().withMessage('invalid id'),
 ], controller.getUserData);
 
 // #=======================================================================================#
@@ -56,13 +55,15 @@ router.get('/users', checkTokens, controller.getAllUsersData);
 // #			                          delete User                                      #
 // #=======================================================================================#
 router.delete('', checkTokens, [
-    body('id').isInt().withMessage('invalid id'),
+    body('_id').isInt().withMessage('invalid id'),
 ], controller.deleteUser);
 
 // #=======================================================================================#
 // #			                            logout                                         #
 // #=======================================================================================#
-router.post('/logout', checkTokens, controller.logout);
+router.post('/logout', [
+    body('_id').isInt().withMessage('invalid id'),
+], checkTokens, controller.logout);
 // #=======================================================================================#
 // #			                        exports router                                     #
 // #=======================================================================================#
