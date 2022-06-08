@@ -7,5 +7,5 @@ const schema = new mongoose.Schema({
 }, { timestamps: true });
 
 schema.plugin(AutoIncrementID, [{ field: '_id' }]);
-module.exports = mongoose.model('tags', schema)
+module.exports = mongoose.model('tags', schema);
 

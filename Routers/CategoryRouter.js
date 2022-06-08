@@ -12,7 +12,16 @@ router.route('')
 
     .get(categoryID(), controller.getCategoryByID)
 
-    .put(categoryID(), controller.updateCategory)
+    .put([
+        body("_id").isInt().withMessage('invalid category ID'),
+        body("name").isAlpha().withMessage('invalid category name')
+            .custom((categoryName) => {
+                Category.findOne({ name: categoryName })
+                    .then(categoryName => {
+                        if (categoryName) return Promise.reject('category name already exit')
+                    })
+            })
+    ], controller.updateCategory)
 
     .delete(categoryID(), controller.deleteCategory)
 
