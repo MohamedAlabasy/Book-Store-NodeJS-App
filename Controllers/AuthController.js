@@ -48,40 +48,38 @@ exports.login = (request, response, next) => {
 // #=======================================================================================#
 exports.register = (request, response, next) => {
     validate(request)
-    console.log(request.body);
-    console.log(request.file.filename);
-    // let hash = bcrypt.hashSync(request.body.password, 10);
-    // let user = new User({
-    //     first_name: request.body.first_name,
-    //     last_name: request.body.last_name,
-    //     email: request.body.email,
-    //     password: hash,
-    //     birth_date: request.body.birth_date,
-    //     image: request.file.filename,
-    //     country: request.body.country,
-    //     mobile_phone: request.body.mobile_phone,
-    //     gender: request.body.gender,
-    // })
-    // user.save()
-    //     .then((data) => {
-    //         response.status(200).json({
-    //             status: 1,
-    //             data: {
-    //                 id: data._id,
-    //                 first_name: data.first_name,
-    //                 last_name: data.last_name,
-    //                 email: data.email,
-    //                 birth_date: data.birth_date,
-    //                 image: data.image,
-    //                 country: data.country,
-    //                 mobile_phone: data.mobile_phone,
-    //                 gender: data.gender,
-    //             },
-    //         })
-    //     })
-    //     .catch((error) => {
-    //         next(error)
-    //     })
+    let hash = bcrypt.hashSync(request.body.password, 10);
+    let user = new User({
+        first_name: request.body.first_name,
+        last_name: request.body.last_name,
+        email: request.body.email,
+        password: hash,
+        birth_date: request.body.birth_date,
+        image: request.file.filename,
+        country: request.body.country,
+        mobile_phone: request.body.mobile_phone,
+        gender: request.body.gender,
+    })
+    user.save()
+        .then((data) => {
+            response.status(200).json({
+                status: 1,
+                data: {
+                    id: data._id,
+                    first_name: data.first_name,
+                    last_name: data.last_name,
+                    email: data.email,
+                    birth_date: data.birth_date,
+                    image: data.image,
+                    country: data.country,
+                    mobile_phone: data.mobile_phone,
+                    gender: data.gender,
+                },
+            })
+        })
+        .catch((error) => {
+            next(error)
+        })
 }
 // #=======================================================================================#
 // #			                       get User by id                                      #
