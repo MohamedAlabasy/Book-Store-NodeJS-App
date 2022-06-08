@@ -30,7 +30,6 @@ router.post('/register', [
         }),
     body('password').isStrongPassword().withMessage('Password Must contain at least 1 characters(upper and lower),numbers,special characters'),
     body('birth_date').isDate({ format: 'YYYY-MM-DD' }).withMessage('invalid birth date you must enter it in form of YYYY-MM-DD'),
-    body('profile_image'),
     body('country').isAlpha().withMessage('invalid country'),
     body('mobile_phone').custom((phoneNumber) => {
         let reg = /^01[0125][0-9]{8}$/;

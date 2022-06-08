@@ -8,6 +8,7 @@ const path = require('path');
 const userRouter = require('./Routers/AuthRouter');
 const controllerRouter = require('./Routers/CategoryRouter');
 const tagRouter = require('./Routers/TagRouter');
+const authorRouter = require('./Routers/AuthorRouter');
 
 require('dotenv').config();
 const app = express();
@@ -76,6 +77,7 @@ app.use(multer({ storage, fileFilter }).single('image'));
 app.use('', userRouter);
 app.use('/category', controllerRouter);
 app.use('/tag', tagRouter);
+app.use('/author', authorRouter);
 
 
 // #=======================================================================================#
