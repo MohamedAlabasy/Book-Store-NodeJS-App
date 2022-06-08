@@ -1,9 +1,7 @@
-const { body } = require('express-validator');
-const { findById } = require('../Models/CategorySchema');
 const Category = require('../Models/CategorySchema');
 const { validate } = require('../Utils/validate');
 
-const unreturnedData = "-createdAt -updatedAt -__v";
+const unreturnedData = '-createdAt -updatedAt -__v';
 
 // #=======================================================================================#
 // #			                                Create                                     #
@@ -48,7 +46,7 @@ exports.getCategoryByID = (request, response, next) => {
         })
 }
 // #=======================================================================================#
-// #			                         get All Category                                  #
+// #			                         get All Categories                                #
 // #=======================================================================================#
 exports.getAllCategory = (request, response, next) => {
     validate(request)

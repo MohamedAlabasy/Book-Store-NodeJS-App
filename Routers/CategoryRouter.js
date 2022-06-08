@@ -12,7 +12,7 @@ router.route('')
 
     .get(categoryID(), controller.getCategoryByID)
 
-    .patch(categoryID(), controller.updateCategory)
+    .put(categoryID(), controller.updateCategory)
 
     .delete(categoryID(), controller.deleteCategory)
 
