@@ -133,3 +133,6 @@ dist
 *.png
 *.jpg
 *.jpeg
+
+# except
+!avatar.png
