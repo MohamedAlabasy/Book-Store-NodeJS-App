@@ -73,15 +73,25 @@ exports.getAllCategory = (request, response, next) => {
 // #=======================================================================================#
 exports.updateCategory = (request, response, next) => {
     validate(request);
-    Category.findByIdAndUpdate(request.body._id, {
-        $set: {
-            name: request.body.name,
-        }
-    })
-        .then(data => {
+    // Category.findByIdAndUpdate(request.body._id, {
+    //     $set: {
+    //         name: request.body.name,
+    //     }
+    // }) .then(data => {
+    //     response.status(200).json({
+    //         status: 1,
+    //         data: data,
+    //     })
+    // })
+    Category.findById(request.body._id).select(unreturnedData)
+        .then(categoryData => {
+            if (categoryData === null) throw new Error('Category not found');
+            categoryData.name = request.body.name
+            return categoryData.save()
+        }).then(saveData => {
             response.status(200).json({
                 status: 1,
-                data: data,
+                data: saveData,
             })
         })
         .catch(error => {
