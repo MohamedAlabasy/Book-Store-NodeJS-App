@@ -9,20 +9,8 @@ const router = express.Router();
 router.get('/all', controller.getAllCategory)
 router.route('')
     .post(categoryName(), controller.createCategory)
-
     .get(categoryID(), controller.getCategoryByID)
-
-    .put([
-        body("_id").isInt().withMessage('invalid category ID'),
-        body("name").isAlpha().withMessage('invalid category name')
-            .custom((categoryName) => {
-                Category.findOne({ name: categoryName })
-                    .then(categoryName => {
-                        if (categoryName) return Promise.reject('category name already exit')
-                    })
-            })
-    ], controller.updateCategory)
-
+    .put(categoryID(), categoryName(), controller.updateCategory)
     .delete(categoryID(), controller.deleteCategory)
 
 

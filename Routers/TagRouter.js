@@ -1,5 +1,5 @@
 const express = require("express");
-const { query, body, param } = require('express-validator');
+const { body, check } = require('express-validator');
 
 const Tag = require('../Models/TagSchema');
 const controller = require('../Controllers/TagController');
@@ -7,35 +7,27 @@ const controller = require('../Controllers/TagController');
 const router = express.Router();
 
 router.route('')
-    .post(
-        [
-            body("tag").isAlpha().withMessage('invalid tag name')
-            // .custom((tagName) => {
-            //     Tag.findOne({ tag: tagName })
-            //         .then(data => {
-            //             if (data) return Promise.reject('tag name already exit')
-            //         })
-            // })
-        ], controller.createTag)
-
-    .get(checkID(), controller.getTagByID)
-
-    .put(
-        [
-            body("_id").isInt().withMessage('invalid Tag ID'),
-            body("tag").isAlpha().withMessage('invalid Tag name')
-            // .custom((tagName) => {
-            //     Tag.findOne({ tag: tagName })
-            //         .then(tagName => {
-            //             if (tagName) return Promise.reject('tag name already exit');
-            //         })
-            // })
-        ], controller.updateTag)
-
-    .delete(checkID(), controller.deleteTag)
+    .post(tagData(), controller.createTag)
+    .get(tagID(), controller.getTagByID)
+    .put(tagID(), tagData(), controller.updateTag)
+    .delete(tagID(), controller.deleteTag)
 
 
-function checkID() {
+function tagData() {
+    return [
+        body("tag").isAlpha().withMessage('invalid tag name'),
+        check('tag').custom(tagName => {
+            return Tag.findOne({ tag: tagName })
+                .then(tagData => {
+                    if (tagData) {
+                        return Promise.reject('tag name already exit');
+                    }
+                });
+        }),
+    ]
+}
+
+function tagID() {
     return [
         body("_id").isInt().withMessage('invalid category ID')
     ]
