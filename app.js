@@ -10,6 +10,7 @@ const controllerRouter = require('./Routers/CategoryRouter');
 const tagRouter = require('./Routers/TagRouter');
 const authorRouter = require('./Routers/AuthorRouter');
 const bookRouter = require('./Routers/BookRouter');
+const commentRouter = require('./Routers/CommentRouter');
 
 require('dotenv').config();
 const app = express();
@@ -80,8 +81,7 @@ app.use('/category', controllerRouter);
 app.use('/tag', tagRouter);
 app.use('/author', authorRouter);
 app.use('/book', bookRouter);
-
-
+app.use('/comment', commentRouter);
 // #=======================================================================================#
 // #			                        not Found middleware                               #
 // #=======================================================================================#
