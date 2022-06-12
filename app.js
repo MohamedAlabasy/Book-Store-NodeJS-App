@@ -9,6 +9,7 @@ const userRouter = require('./Routers/AuthRouter');
 const controllerRouter = require('./Routers/CategoryRouter');
 const tagRouter = require('./Routers/TagRouter');
 const authorRouter = require('./Routers/AuthorRouter');
+const bookRouter = require('./Routers/BookRouter');
 
 require('dotenv').config();
 const app = express();
@@ -50,7 +51,7 @@ app.use(body_parser.urlencoded({ extended: false }));
 // #=======================================================================================#
 const storage = multer.diskStorage({
     destination: (request, file, callback) => {
-        callback(null, path.join(__dirname, 'public/images'))
+        callback(null, path.join(__dirname, 'Public/images'))
     },
     filename: (request, file, callback) => {
         callback(null, new Date().toUTCString().replace(/:/g, '-') + '-' + file.originalname);
@@ -78,6 +79,7 @@ app.use('', userRouter);
 app.use('/category', controllerRouter);
 app.use('/tag', tagRouter);
 app.use('/author', authorRouter);
+app.use('/book', bookRouter);
 
 
 // #=======================================================================================#
